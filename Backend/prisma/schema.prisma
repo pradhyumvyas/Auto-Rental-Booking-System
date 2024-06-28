@@ -58,9 +58,9 @@ model meta_vechile_data  {
   is_active  Boolean
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  deleted_at DateTime
+  deleted_at DateTime?
 
-  VehicleRecords vechile_record[]
+  vechile_record vechile_record[]
 }
 
 model vechile_record{
@@ -75,13 +75,13 @@ model vechile_record{
   vechile_registration_number String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  deleted_at DateTime 
+  deleted_at DateTime?
   meta_vechile_id Int 
 
-  metaVehicle meta_vechile_data @relation(fields: [meta_vechile_id], references: [id])
-  bookingRecord booking_record[]
+  meta_vehicle meta_vechile_data @relation(fields: [meta_vechile_id], references: [id])
+  booking_record booking_record[]
   vehicle_document vehicle_document[]
-  vechileOwner vechile_owner @relation(fields: [vechile_owner_id], references: [id])
+  vechile_owner vechile_owner @relation(fields: [vechile_owner_id], references: [id])
 
   @@index([meta_vechile_id], name: "meta_vechile_id")
 

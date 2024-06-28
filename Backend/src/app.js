@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -19,7 +18,7 @@ app.use(express.urlencoded({
 }))
 
 // Routes starts here
-import bookingRouter from "./routes/user.routes.js";
+import bookingRouter from "./routes/routes.js";
 
 // Mounting routes with middleware, app.use() is used to mount middleware 
 //instead of app.get() or app.post()
