@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+// Enums
+enum primary_vehicle_type {
+  CAR
+  BIKE
+  TRUCK
+  BUS
+  AUTO
+  CYCLE
+}
+enum secondary_vehicle_type {
+  HATCHBACK
+   SEDA
+   SUV
+   CRUISER
+   SPORTS
+   SCOOTY
+}
+
+enum fuil_type {
+  PETROL
+  DIESEL
+  CNG
+  ELECTRIC
+}
+
+enum vechile_condition {
+  FAIR
+  EXCELLENT
+}
+enum DocumentTypeEnum {
+  REGISTRATION
+  INSURANCE
+  SERVICE
+  OTHER
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model meta_vechile_data  {
+  id Int @id @default(autoincrement()) 
+  primary_vehicle_type primary_vehicle_type 
+  secondary_vehicle_type secondary_vehicle_type
+  is_active  Boolean
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime
+
+  VehicleRecords vechile_record[]
+}
+
+model vechile_record{
+  id Int @id @default(autoincrement()) 
+  vechile_record_id Int
+  name String 
+  condition vechile_condition
+  total_km String
+  fuil_type fuil_type 
+  vechile_owner_id  Int
+  vechile_availability_status  Boolean
+  vechile_registration_number String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime 
+  meta_vechile_id Int 
+
+  metaVehicle meta_vechile_data @relation(fields: [meta_vechile_id], references: [id])
+  bookingRecord booking_record[]
+  vehicle_document vehicle_document[]
+  vechileOwner vechile_owner @relation(fields: [vechile_owner_id], references: [id])
+
+  @@index([meta_vechile_id], name: "meta_vechile_id")
+
+}
+
+model booking_record {
+  id               Int       @id @default(autoincrement())
+  vechile_record_id  Int
+  start_time        DateTime
+  end_time          DateTime
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  deleted_at        DateTime?
+
+  vechile_record    vechile_record @relation(fields: [vechile_record_id], references: [id])
+
+  @@index([vechile_record_id])
+}
+
+model vechile_owner {
+  id              Int       @id @default(autoincrement())
+  name            String
+  phone_no         Float
+  driving_licence  String
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+  deleted_at       DateTime?
+
+  vechile_record  vechile_record[]
+}
+
+model vehicle_document {
+  id               Int       @id @default(autoincrement())
+  documents_url     String
+  document_type     DocumentTypeEnum
+  vehicle_record_id  Int
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  deleted_at        DateTime?
+
+  vehicle_record    vechile_record @relation(fields: [vehicle_record_id], references: [id])
+
+  @@index([vehicle_record_id])
+}
+
