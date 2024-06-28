@@ -1,16 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { Button } from './components/ui/button'
+import './index.css'
+import {Header, Footer, Loader} from './components/customComponent/index.js'
+import { Outlet } from 'react-router-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-     <h1 className='text-3xl font-bold underline'>Test Project</h1>
-     <Button variant="outline" className="bg-blue-700">Next</Button>
+     <div className="w-full block dark">
+          <Header />
+          <main>
+            <Loader />
+            <div className="blur-bg-custom">
+              <Outlet /> 
+            </div>
+          </main>
+          <Footer />
+      </div>
     </>
   )
 }
