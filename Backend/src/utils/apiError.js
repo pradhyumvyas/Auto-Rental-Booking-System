@@ -1,8 +1,10 @@
 class ApiError extends Error {
+
    constructor(statusCode, 
        message="Someting went wrong",
        errors=[],
        stack=""
+       
    ) {
      super(message);
      this.statusCode = statusCode;
@@ -10,7 +12,7 @@ class ApiError extends Error {
      this.message = message;
      this.success = false;
      this.errors = errors;
- 
+     console.log("In the api error file")
      if(stack){
        this.stack = stack;
      }else{

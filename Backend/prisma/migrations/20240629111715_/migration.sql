@@ -3,10 +3,11 @@ CREATE TABLE `meta_vechile_data` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `primary_vehicle_type` ENUM('CAR', 'BIKE', 'TRUCK', 'BUS', 'AUTO', 'CYCLE') NOT NULL,
     `secondary_vehicle_type` ENUM('HATCHBACK', 'SEDA', 'SUV', 'CRUISER', 'SPORTS', 'SCOOTY') NOT NULL,
+    `wheeler_type` ENUM('TWO', 'THREE', 'FOUR', 'SIX', 'EIGHT') NOT NULL,
     `is_active` BOOLEAN NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `deleted_at` DATETIME(3) NOT NULL,
+    `deleted_at` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -24,7 +25,7 @@ CREATE TABLE `vechile_record` (
     `vechile_registration_number` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `deleted_at` DATETIME(3) NOT NULL,
+    `deleted_at` DATETIME(3) NULL,
     `meta_vechile_id` INTEGER NOT NULL,
 
     INDEX `meta_vechile_id`(`meta_vechile_id`),
@@ -35,6 +36,8 @@ CREATE TABLE `vechile_record` (
 CREATE TABLE `booking_record` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `vechile_record_id` INTEGER NOT NULL,
+    `first_name` VARCHAR(191) NOT NULL,
+    `last_name` VARCHAR(191) NOT NULL,
     `start_time` DATETIME(3) NOT NULL,
     `end_time` DATETIME(3) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),

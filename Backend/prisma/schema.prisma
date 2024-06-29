@@ -15,8 +15,8 @@ enum primary_vehicle_type {
   CYCLE
 }
 enum secondary_vehicle_type {
-  HATCHBACK
-   SEDA
+   HATCHBACK
+   SEDAN
    SUV
    CRUISER
    SPORTS
@@ -40,6 +40,13 @@ enum DocumentTypeEnum {
   SERVICE
   OTHER
 }
+enum wheeler_type {
+  TWO
+  THREE
+  FOUR
+  SIX
+  EIGHT
+}
 generator client {
   provider = "prisma-client-js"
 }
@@ -55,6 +62,7 @@ model meta_vechile_data  {
   id Int @id @default(autoincrement()) 
   primary_vehicle_type primary_vehicle_type 
   secondary_vehicle_type secondary_vehicle_type
+  wheeler_type wheeler_type
   is_active  Boolean
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -90,6 +98,8 @@ model vechile_record{
 model booking_record {
   id               Int       @id @default(autoincrement())
   vechile_record_id  Int
+  first_name        String
+  last_name         String
   start_time        DateTime
   end_time          DateTime
   created_at        DateTime  @default(now())
