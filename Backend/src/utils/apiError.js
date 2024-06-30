@@ -8,16 +8,17 @@ class ApiError extends Error {
    ) {
      super(message);
      this.statusCode = statusCode;
-     this.data = null
+     this.data = message
      this.message = message;
      this.success = false;
      this.errors = errors;
-     console.log("In the api error file")
+     console.log("In the api error file", this.errors)
      if(stack){
        this.stack = stack;
      }else{
        Error.captureStackTrace(this, this.constructor);
      }
+     
    }
  }
  

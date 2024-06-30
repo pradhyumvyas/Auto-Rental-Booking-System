@@ -9,32 +9,40 @@ export const createBooking = asyncHandler(async (req, res, next) => {
       console.log("booking data");
       const { 
          vechile_record_id,
-         start_date,
-         end_date,
+         start_time,
+         end_time,
          first_name,
          last_name,
        } = req.body;
 
-      if(!vechile_record_id || !start_date || !end_date || !first_name || !last_name){
+       console.log("booking data", start_time , end_time );
+
+      if(!vechile_record_id || !start_time || !end_time || !first_name || !last_name){
            
-         throw new ApiError(400, 'Start date should be less than end date');
+         return res
+         .status(400)
+         .json(new ApiError(400, 'All fields are required'));
       }
 
-      if(new Date(start_date) > new Date(end_date)){
-         throw new ApiError(400, 'Start date should be less than end date');
+      if(new Date(start_time) > new Date(end_time)){
+         return res
+         .status(400)
+         .json(new ApiError(400, 'Start date should be less than end date'));
       }
 
-      if(new Date(start_date) < new Date()){
-         throw new ApiError(400, 'Start date should be greater than current date');
+      if(new Date(start_time) < new Date()){
+         return res
+         .status(400)
+         .json(new ApiError(400, 'Start date should be greater than current date'));
       }
 
-      const booking = await prisma.booking.create({
+      const booking = await prisma.booking_record.create({
          data: {
-         vechile_record_id,
-         start_date,
-         end_date,
-         first_name,
-         last_name,
+            vechile_record_id,
+            start_time : new Date(start_time),
+            end_time:new Date(end_time),
+            first_name,
+            last_name
          }
       });
 
@@ -43,7 +51,7 @@ export const createBooking = asyncHandler(async (req, res, next) => {
       .json(new ApiResponse(200, booking));
    } catch (error) {
       console.log(error);
-      return next(new ApiError(500, 'Internal Server Error'));
+      throw next(new ApiError(500, 'Internal Server Error'));
    }
    }
 )
