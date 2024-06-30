@@ -77,7 +77,7 @@ Make sure you have the following installed on your local machine:
    Your server start at http://localhost:<PORT>.
    
 ## Database Design
-   [Database Design](./src/assets/diagram-export-29-06-2024-04_21_54.png)
+   ![Database Design](./src/assets/diagram-export-29-06-2024-04_21_54.png)
 
 ## Acknowledgments
 
