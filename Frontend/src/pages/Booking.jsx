@@ -2,7 +2,10 @@ import React,{useState, useEffect} from 'react'
 import { useForm } from 'react-hook-form'
 import { TextInput,DateRangePicker, RadioInput } from '@/components/customComponent/index.js'
 import { Button } from '@/components/ui/button';
-import { getVehicleData } from '../services/booking.service.js';
+import { getVehicleData, bookingVehicle } from '../services/booking.service.js';
+import { BookingModel } from '@/constants/booking.model.js';
+import { useToast } from "@/components/ui/use-toast"
+
 
 const Booking = () => {
   const { register, handleSubmit, watch, errors, getValues } = useForm();
@@ -19,35 +22,43 @@ const Booking = () => {
   const numberOfWheels = watch('numberOfWheels');
   const vehicleType = watch('vehicleType');
 
-  let wheelType = [];
-  let typesOfVehicle = [];
-  let specificModel = [];
-
   const nextStep = () => {
     setStep(step + 1);
   };
-  const onSubmit = (data)=>{
-    console.log(data, "form Data")
-    console.log(startDate, "start Date");
-    console.log(endDate, "end Date");
+  const onSubmit = async (data)=>{
+
+    const bookingDetails = new BookingModel;
+    bookingDetails.vechile_record_id = parseInt(data.specificModel);
+    bookingDetails.start_time = startDate;
+    bookingDetails.end_time = endDate;
+    bookingDetails.first_name = data.firstName;
+    bookingDetails.last_name = data.lastName;
+
+    const submitBooking = await bookingVehicle(bookingDetails);
+    if(submitBooking.success === true){
+      toast({
+        title: "Booking Successful",
+        description: "Your booking has been successfully submitted",
+        variant: "outline",
+      })
+    }else{
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    }
   }
 
   const getData = async() =>{
     console.log("get data");
     const response = await getVehicleData();
-    // const data = await response.json();
     console.log(response, "data vvvv")
     setVehicleData(response);
     wheelType = [...new Set(vehicleData.data.map(data => data.wheeler_type))];
   }
 
-  const extractData =()=>{
-    // let wheelType = 
-
-    // const typesOfVehicle = vehicleData.map((data) => data.typesOfVehicle);
-    // const specificModel = vehicleData.map((data) => data.specificModel);
-
-  }
   useEffect(() => {
     getData();
   }, []);
@@ -71,10 +82,13 @@ const Booking = () => {
       vehicleData.data
           .filter(data => data.wheeler_type === numberOfWheels && data.secondary_vehicle_type === vehicleType)
           .forEach(data => {
-              names.push(...data.vechile_record.map(record => record.name));
+            data.vechile_record.map((record) => {
+              console.log(record, "record ssdsdsds")
+              names.push({ id: record.id, name: record.name });
+             });
           });
 
-          setSpecificModels(names.map(name => ({ label: name, value: name })));
+          setSpecificModels(names.map(record => ({ label: record.name, value: record.id })));
     }
   }, [vehicleType]);
 

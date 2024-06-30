@@ -1,4 +1,4 @@
-class Bookig{
+export class BookingModel{
       constructor(){
          this.vechile_record_id,
          this.start_time,
