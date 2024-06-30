@@ -36,6 +36,24 @@ export const createBooking = asyncHandler(async (req, res, next) => {
          .json(new ApiError(400, 'Start date should be greater than current date'));
       }
 
+      const isAlreadyBooked = await prisma.booking_record.findMany({
+         where: {
+           vechile_record_id: vechile_record_id,
+           start_time: {
+             lte: new Date(start_time)
+           },
+           end_time: {
+             gte: new Date(end_time)
+           }
+         }
+       });
+
+         if(isAlreadyBooked.length > 0){
+            return res
+            .status(200)
+            .json(new ApiResponse(200, booking, 'Booked'));
+         }
+
       const booking = await prisma.booking_record.create({
          data: {
             vechile_record_id,
