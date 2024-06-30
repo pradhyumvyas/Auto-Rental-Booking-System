@@ -87,7 +87,6 @@ We would like to extend our gratitude to the following technologies and resource
 - **[Express.js](https://expressjs.com/)**: For simplifying the development of our web server and API.
 - **[MySQL](https://www.mysql.com/)**: For offering a reliable and efficient relational database management system.
 - **[Prisma ORM](https://www.prisma.io/)**: For enabling us to manage and interact with our database effortlessly.
-- **[JWT](https://jwt.io/)**: For facilitating secure and efficient user authentication.
 - **[Visual Studio Code](https://code.visualstudio.com/)**: For being our preferred code editor with its powerful features and extensions.
 - **[GitHub](https://github.com/)**: For providing an excellent platform for version control and collaboration.
 
