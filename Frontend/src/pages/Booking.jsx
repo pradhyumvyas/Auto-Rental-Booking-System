@@ -2,17 +2,26 @@ import React,{useState, useEffect} from 'react'
 import { useForm } from 'react-hook-form'
 import { TextInput,DateRangePicker, RadioInput } from '@/components/customComponent/index.js'
 import { Button } from '@/components/ui/button';
+import { getVehicleData } from '../services/booking.service.js';
 
 const Booking = () => {
   const { register, handleSubmit, watch, errors, getValues } = useForm();
   const [step, setStep] = useState(1);
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
   const [vehicleTypes, setVehicleTypes] = useState([]);
   const [specificModels, setSpecificModels] = useState([]);
 
+  const [vehicleData, setVehicleData] = useState([]);
+
   const numberOfWheels = watch('numberOfWheels');
   const vehicleType = watch('vehicleType');
+
+  let wheelType = [];
+  let typesOfVehicle = [];
+  let specificModel = [];
 
   const nextStep = () => {
     setStep(step + 1);
@@ -23,16 +32,34 @@ const Booking = () => {
     console.log(endDate, "end Date");
   }
 
+  const getData = async() =>{
+    console.log("get data");
+    const response = await getVehicleData();
+    // const data = await response.json();
+    console.log(response, "data vvvv")
+    setVehicleData(response);
+    wheelType = [...new Set(vehicleData.data.map(data => data.wheeler_type))];
+  }
+
+  const extractData =()=>{
+    // let wheelType = 
+
+    // const typesOfVehicle = vehicleData.map((data) => data.typesOfVehicle);
+    // const specificModel = vehicleData.map((data) => data.specificModel);
+
+  }
+  useEffect(() => {
+    getData();
+  }, []);
+
   useEffect(() => {
     if (numberOfWheels) {
-      // Fetch vehicle types from the database based on number of wheels
-      const fetchVehicleTypes = async () => {
-        // Mock data fetching
-        const types = numberOfWheels === '2' ? ['Bike', 'Scooter'] : ['Car', 'Truck'];
-        setVehicleTypes(types.map(type => ({ label: type, value: type })));
-      };
 
-      fetchVehicleTypes();
+      const secondaryTypes = [...new Set(vehicleData.data
+        .filter(data => data.wheeler_type === numberOfWheels)
+        .map(data => data.secondary_vehicle_type))];
+      console.log(secondaryTypes, "secondaryTypes")
+        setVehicleTypes(secondaryTypes.map(type => ({ label: type, value: type })));
     }
   }, [numberOfWheels]);
 
@@ -40,14 +67,14 @@ const Booking = () => {
 
   useEffect(() => {
     if (vehicleType) {
-      // Fetch specific models from the database based on vehicle type
-      const fetchSpecificModels = async () => {
-        // Mock data fetching
-        const models = vehicleType === 'Bike' ? ['Model A', 'Model B'] : vehicleType === 'Scooter' ? ['Model C', 'Model D'] : vehicleType === 'Car' ? ['Model E', 'Model F'] : ['Model G', 'Model H'];
-        setSpecificModels(models.map(model => ({ label: model, value: model })));
-      };
+      const names = [];
+      vehicleData.data
+          .filter(data => data.wheeler_type === numberOfWheels && data.secondary_vehicle_type === vehicleType)
+          .forEach(data => {
+              names.push(...data.vechile_record.map(record => record.name));
+          });
 
-      fetchSpecificModels();
+          setSpecificModels(names.map(name => ({ label: name, value: name })));
     }
   }, [vehicleType]);
 
@@ -65,8 +92,8 @@ const Booking = () => {
             label="Number of Wheels"
             name="numberOfWheels"
             options={[
-              { label: '2', value: '2' },
-              { label: '4', value: '4' },
+              { label: '2', value: 'TWO' },
+              { label: '4', value: 'FOUR' },
             ]}
             register={register}
             required
